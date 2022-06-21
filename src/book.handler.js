@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
-import { Books } from '../model/books.js';
-import { HttpException } from '../exception/exception.js';
-import { filterBookId } from '../filter/book.filter.js';
+import { Books } from './books.js';
+import { HttpException } from './exception/exception.js';
+import { filterBookId } from './filter/book.filter.js';
 
 export const addBook = (req, h) => {
   const {
