@@ -1,0 +1,30 @@
+{
+  "name": "bookshelf",
+  "version": "1.0.0",
+  "description": "dicoding bookshelf submission",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon src/app.js",
+    "lint": "eslint src/**/*.js",
+    "lint:fix": "eslint --fix",
+    "format": "prettier --write src/**/*.js"
+  },
+  "keywords": [],
+  "author": "Muhammmad Rafly Rafsanjani",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/hapi": "^20.2.2",
+    "dotenv": "^16.0.1",
+    "nanoid": "^4.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.18.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "nodemon": "^2.0.16",
+    "prettier": "^2.7.1"
+  }
+}
