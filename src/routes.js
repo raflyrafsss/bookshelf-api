@@ -1,8 +1,10 @@
 import {
   addBook,
-  getBookById,
   getBooks,
-} from './controller/book.controller.js';
+  getBookById,
+  // deleteBook,
+  // updateBook,
+} from './book.controller.js';
 
 export const routes = [
   {
@@ -17,7 +19,17 @@ export const routes = [
   },
   {
     method: 'GET',
-    path: '/books/{id}',
+    path: '/books/{bookId}',
     handler: getBookById,
   },
+  // {
+  //   method: 'PUT',
+  //   path: '/books/{bookId}',
+  //   handler: updateBook,
+  // },
+  // {
+  //   method: 'DELETE',
+  //   path: '/books/{bookId}',
+  //   handler: deleteBook,
+  // },
 ];

@@ -1,7 +1,5 @@
 import { nanoid } from 'nanoid';
-import { Books } from './books.js';
-import { HttpException } from './exception/exception.js';
-import { filterBookId } from './filter/book.filter.js';
+import { books } from './books.model.js';
 
 export const addBook = (req, h) => {
   const {
@@ -14,17 +12,33 @@ export const addBook = (req, h) => {
     readPage,
     reading,
   } = req.payload;
-  let finished = false;
-
-  // Generate ID
   const id = nanoid(16);
-
-  // Create Timestamp
   const insertedAt = new Date().toISOString();
   const updatedAt = insertedAt;
 
-  if (pageCount === readPage) {
+  let finished;
+
+  if (name === undefined) {
+    const response = h.response({
+      status: 'fail',
+      message: 'Gagal menambahkan buku. Mohon isi nama buku',
+    });
+    response.code(400);
+    return response;
+  }
+
+  if (readPage > pageCount) {
+    const response = h.response({
+      status: 'fail',
+      message:
+        'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
+    });
+    response.code(400);
+    return response;
+  } else if (readPage === pageCount) {
     finished = true;
+  } else {
+    finished = false;
   }
 
   const data = {
@@ -41,43 +55,16 @@ export const addBook = (req, h) => {
     insertedAt,
     updatedAt,
   };
-
-  // Push data to Book Model
-  Books.push(data);
-
-  const isSuccess = Books.filter((book) => book.id === id).length > 0;
-  console.log(isSuccess);
-
+  books.push(data);
+  const isSuccess = books.filter((book) => book.id === id).length > 0;
   if (isSuccess) {
     const response = h.response({
       status: 'success',
       message: 'Buku berhasil ditambahkan',
-      data: data,
-    });
-    response.code(201);
-    return response;
-  }
-
-  const response = h.response({
-    status: 'error',
-    message: 'Buku gagal ditambahkan',
-  });
-  response.code(500);
-  return response;
-};
-
-export const getBooks = () => ({
-  status: 'success',
-  data: Books,
-});
-
-export const getBookById = (req, h) => {
-  const { id } = req.params;
-  console.log(filterBookId(1));
-  if (filterBookId(id) == null) {
-    const response = h.response({
-      status: 'success',
-      data: filterBookId(id),
+      data: {
+        bookId: data.id,
+        book: books,
+      },
     });
     response.code(201);
     return response;
@@ -85,16 +72,39 @@ export const getBookById = (req, h) => {
 
   const response = h.response({
     status: 'fail',
+    message: 'Buku gagal ditambahkan',
+  });
+  response.code(400);
+  return response;
+};
+
+export const getBooks = () => ({
+  status: 'success',
+  data: {
+    books: books.map((book) => {
+      return {
+        id: book.id,
+        name: book.name,
+        publisher: book.publisher,
+      };
+    }),
+  },
+});
+
+export const getBookById = (req, h) => {
+  const { id } = req.params;
+  const book = books.filter((b) => b.id === id)[0];
+  console.log(book);
+  if (book !== undefined) {
+    return {
+      status: 'success',
+      data: book,
+    };
+  }
+  const response = h.response({
+    status: 'fail',
     message: 'Buku tidak ditemukan',
   });
   response.code(404);
   return response;
-};
-
-export const updateBook = (req, h) => {
-  const { id } = req.params;
-};
-
-export const deleteBook = (req, h) => {
-  const { id } = req.params;
 };
