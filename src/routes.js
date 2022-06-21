@@ -2,8 +2,8 @@ import {
   addBook,
   getBooks,
   getBookById,
+  updateBook,
   // deleteBook,
-  // updateBook,
 } from './book.controller.js';
 
 export const routes = [
@@ -22,11 +22,11 @@ export const routes = [
     path: '/books/{bookId}',
     handler: getBookById,
   },
-  // {
-  //   method: 'PUT',
-  //   path: '/books/{bookId}',
-  //   handler: updateBook,
-  // },
+  {
+    method: 'PUT',
+    path: '/books/{bookId}',
+    handler: updateBook,
+  },
   // {
   //   method: 'DELETE',
   //   path: '/books/{bookId}',
