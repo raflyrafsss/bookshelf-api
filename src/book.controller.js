@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid';
 import { books } from './books.model.js';
+import { toBool } from './utils.js';
 
 export const addBook = (req, h) => {
   const {
@@ -79,9 +80,64 @@ export const addBook = (req, h) => {
 };
 
 export const getBooks = (req, h) => {
-  const data = books.map((b) => {
-    return { id: b.id, name: b.name, publisher: b.publisher };
-  });
+  const { name, finished, reading } = req.query;
+
+  if (reading !== undefined) {
+    const filteredBook = books.filter((b) => b.reading === toBool(reading));
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: filteredBook.map((filtered) => {
+          return {
+            id: filtered.id,
+            name: filtered.name,
+            publisher: filtered.publisher,
+          };
+        }),
+      },
+    });
+    response.code(200);
+    return response;
+  }
+
+  if (finished !== undefined) {
+    const filteredBook = books.filter((b) => b.finished === toBool(finished));
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: filteredBook.map((filtered) => {
+          return {
+            id: filtered.id,
+            name: filtered.name,
+            publisher: filtered.publisher,
+          };
+        }),
+      },
+    });
+    response.code(200);
+    return response;
+  }
+
+  if (name !== undefined) {
+    const filteredBook = books.filter((b) =>
+      b.name.toLowerCase().includes('dicoding')
+    );
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: filteredBook.map((filtered) => {
+          return {
+            id: filtered.id,
+            name: filtered.name,
+            publisher: filtered.publisher,
+          };
+        }),
+      },
+    });
+    response.code(200);
+    return response;
+  }
+
   const response = h.response({
     status: 'success',
     data: {
@@ -203,4 +259,8 @@ export const deleteBook = (req, h) => {
   });
   response.code(404);
   return response;
+};
+
+export const getBooks2 = (req, h) => {
+  return req.query.name;
 };
